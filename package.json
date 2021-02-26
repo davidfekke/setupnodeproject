@@ -1,0 +1,41 @@
+{
+  "name": "setupnodeproject",
+  "description": "A tool for setting my Node projects",
+  "version": "0.0.0",
+  "author": "David Fekke @davidfekke",
+  "bin": {
+    "snp": "./bin/run"
+  },
+  "bugs": "https://github.com/https://github.com/davidfekke/setupnodeproject.git/setupnodeproject/issues",
+  "dependencies": {
+    "@oclif/command": "^1.8.0",
+    "@oclif/config": "^1.17.0",
+    "@oclif/plugin-help": "^3.2.2"
+  },
+  "devDependencies": {
+    "@oclif/dev-cli": "^1.26.0"
+  },
+  "engines": {
+    "node": ">=8.0.0"
+  },
+  "files": [
+    "/bin",
+    "/src",
+    "gitignoretemplate.txt"
+  ],
+  "homepage": "https://github.com/https://github.com/davidfekke/setupnodeproject.git/setupnodeproject",
+  "keywords": [
+    "oclif"
+  ],
+  "license": "Apache-2.0",
+  "main": "src/index.js",
+  "oclif": {
+    "bin": "snp"
+  },
+  "repository": "https://github.com/davidfekke/setupnodeproject.git/setupnodeproject",
+  "scripts": {
+    "prepack": "oclif-dev readme",
+    "test": "echo NO TESTS",
+    "version": "oclif-dev readme && git add README.md"
+  }
+}
