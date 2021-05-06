@@ -25,6 +25,7 @@ class SetupnodeprojectCommand extends Command {
     const name = flags.name || 'Node Project';
     await this.createGitIgnoreFile();
     await this.npmInitProject();
+    await this.modifyPackageJson();
     await this.createIndexFile();
     await this.createReadme(name);
     await this.gitInit();
@@ -59,6 +60,13 @@ class SetupnodeprojectCommand extends Command {
     await execPromise("git init");
     await execPromise("git add .");
     await execPromise(`git commit -m "Initial Commit"`);
+  }
+
+  async modifyPackageJson() {
+    const packageFile = await fsPromises.readFile('./package.json');
+    const jsonObj = JSON.parse(packageFile);
+    jsonObj['type'] = 'module';
+    await fsPromises.writeFile('./package.json', JSON.stringify(jsonObj, null, 4), 'utf8');
   }
 
 }
