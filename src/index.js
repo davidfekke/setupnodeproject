@@ -3,9 +3,9 @@ const fsPromises = require('fs/promises');
 const { exec } = require("child_process");
 const path = require('path');
 
-const execPromise = async (command, workdir = process.cwd()) => {
+const execPromise = async command => {
   return new Promise(async (resolve, reject) => {
-      exec(command, { shell: '/bin/zsh', cwd: workdir }, (error, stdout, stderr) => {
+      exec(command, { shell: '/bin/zsh' }, (error, stdout, stderr) => {
         if (error) {
           console.log(`error: ${error.message}`);
           reject(`error: ${error.message}`);
@@ -25,6 +25,7 @@ class SetupnodeprojectCommand extends Command {
     const name = flags.name || 'node_project';
     if (flags.folder) {
       await this.createFolder(name);
+      process.chdir(`./${name}`);
     }
     await this.createGitIgnoreFile();
     await this.npmInitProject();
@@ -37,14 +38,7 @@ class SetupnodeprojectCommand extends Command {
   async createGitIgnoreFile() {
     this.log(`Creating git ignore file.`);
     const contentFile = path.join(__dirname, '../gitignoretemplate.txt');
-    const {flags} = this.parse(SetupnodeprojectCommand);
-    const name = flags.name || 'node_project';
-    let workingdir;
-    if (flags.folder) {
-      workingdir = path.join(process.cwd(), name);
-    } else {
-      workingdir = process.cwd();
-    }
+    const workingdir  = process.cwd();
     const gitIgnorePath = path.join(workingdir, '.gitignore');
   
     return await fsPromises.copyFile(contentFile, gitIgnorePath);
@@ -52,41 +46,20 @@ class SetupnodeprojectCommand extends Command {
 
   async npmInitProject() {
     this.log(`NPM Initing project.`);
-    const {flags} = this.parse(SetupnodeprojectCommand);
-    const name = flags.name || 'node_project';
-    if (flags.folder) {
-      return await execPromise("npm init -y", path.join(process.cwd(), name));
-    } 
     return await execPromise("npm init -y");
   }
 
   async createIndexFile() {
     this.log(`Creating blank index file.`);
-    const {flags} = this.parse(SetupnodeprojectCommand);
-    const name = flags.name || 'node_project';
-    if (flags.folder) {
-      return await execPromise("touch index.js", path.join(process.cwd(), name));
-    } 
     return await execPromise("touch index.js");
   }
 
   async createReadme(name) {
     this.log(`Creating README file.`);
-    const {flags} = this.parse(SetupnodeprojectCommand);
-    if (flags.folder) {
-      return await execPromise(`echo "# ${name}" > README.md`, path.join(process.cwd(), name));
-    } 
     return await execPromise(`echo "# ${name}" > README.md`);
   }
 
   async gitInit() {
-    const {flags} = this.parse(SetupnodeprojectCommand);
-    const name = flags.name || 'node_project';
-    if (flags.folder) {
-      await execPromise("git init", path.join(process.cwd(), name));
-      await execPromise("git add .", path.join(process.cwd(), name));
-      await execPromise(`git commit -m "Initial Commit"`, path.join(process.cwd(), name));
-    } 
     await execPromise("git init");
     await execPromise("git add .");
     await execPromise(`git commit -m "Initial Commit"`);
