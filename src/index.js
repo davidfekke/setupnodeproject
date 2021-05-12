@@ -22,7 +22,11 @@ const execPromise = async command => {
 class SetupnodeprojectCommand extends Command {
   async run() {
     const {flags} = this.parse(SetupnodeprojectCommand);
-    const name = flags.name || 'Node Project';
+    const name = flags.name || 'node_project';
+    if (flags.folder) {
+      await this.createFolder(name);
+      process.chdir(`./${name}`);
+    }
     await this.createGitIgnoreFile();
     await this.npmInitProject();
     await this.modifyPackageJson();
@@ -35,9 +39,9 @@ class SetupnodeprojectCommand extends Command {
   async createGitIgnoreFile() {
     this.log(`Creating git ignore file.`);
     const contentFile = path.join(__dirname, '../gitignoretemplate.txt');
-    const workingdir = process.cwd();
+    const workingdir  = process.cwd();
     const gitIgnorePath = path.join(workingdir, '.gitignore');
-
+  
     return await fsPromises.copyFile(contentFile, gitIgnorePath);
   }
 
@@ -62,11 +66,16 @@ class SetupnodeprojectCommand extends Command {
     await execPromise(`git commit -m "Initial Commit"`);
   }
 
+<<<<<<< HEAD
   async modifyPackageJson() {
     const packageFile = await fsPromises.readFile('./package.json');
     const jsonObj = JSON.parse(packageFile);
     jsonObj['type'] = 'module';
     await fsPromises.writeFile('./package.json', JSON.stringify(jsonObj, null, 4), 'utf8');
+=======
+  async createFolder(name) {
+    await fsPromises.mkdir(name);
+>>>>>>> origin/master
   }
 
 }
@@ -82,6 +91,7 @@ SetupnodeprojectCommand.flags = {
   // add --help flag to show CLI version
   help: flags.help({char: 'h'}),
   name: flags.string({char: 'n', description: 'name to print'}),
+  folder: flags.boolean({char: 'f', description: 'create Folder for project', default: false })
 }
 
 module.exports = SetupnodeprojectCommand
