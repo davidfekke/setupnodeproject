@@ -66,16 +66,15 @@ class SetupnodeprojectCommand extends Command {
     await execPromise(`git commit -m "Initial Commit"`);
   }
 
-<<<<<<< HEAD
   async modifyPackageJson() {
     const packageFile = await fsPromises.readFile('./package.json');
     const jsonObj = JSON.parse(packageFile);
     jsonObj['type'] = 'module';
     await fsPromises.writeFile('./package.json', JSON.stringify(jsonObj, null, 4), 'utf8');
-=======
+  }
+  
   async createFolder(name) {
     await fsPromises.mkdir(name);
->>>>>>> origin/master
   }
 
 }
